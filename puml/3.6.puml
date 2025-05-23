@@ -1,0 +1,46 @@
+@startuml
+
+skinparam linetype ortho
+skinparam dpi 150
+skinparam defaultTextAlignment center
+
+top to bottom direction
+
+actor 用户
+
+' 第1层：UI层
+rectangle "UI界面模块\n(UIController)" as UI
+
+' 第2层：控制器层
+rectangle "调度控制器\nTrafficController" as Controller
+
+' 第3层：模型层（左右分布）
+rectangle "车辆模块\nCar" as Car
+rectangle "信号灯模块\nTrafficLight" as Light
+rectangle "配置模块\nConfigLoader" as Config
+
+' 第4层：视图层
+rectangle "视图模块\nCarView / TrafficLightView" as View
+
+' 第5层：导出层
+rectangle "数据导出模块\nCsvExporter" as Exporter
+rectangle "CSV 文件\n(car_data_xxx.csv)" as File
+
+' ========= 连接关系 =========
+
+用户 --> UI : 操作输入\n(开始/暂停/添加/导出)
+UI --> Controller : 调用控制器方法
+
+Controller --> Car : 控制车辆线程
+Controller --> Light : 控制信号灯线程
+Controller --> Config : 获取配置参数
+
+Car --> View : 通知更新
+Light --> View : 通知更新
+View --> UI : JavaFX线程刷新图形组件
+
+UI --> Exporter : 点击导出CSV
+Exporter --> Car : 拉取车辆数据
+Exporter --> File : 写入文件
+
+@enduml

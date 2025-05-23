@@ -1,0 +1,57 @@
+@startuml
+
+
+skinparam linetype ortho
+skinparam dpi 150
+skinparam defaultTextAlignment center
+
+' ========= 类定义 =========
+class TrafficLight {
+  - positionX: int
+  - currentColor: Color
+  - countdownMs: int
+  - observers: List<TrafficLightObserver>
+  + run()
+  + pause()
+  + resume()
+  + stop()
+  + switchToNextColor()
+  + registerObserver()
+  + getPositionX()
+  + getCurrentColor()
+}
+
+class TrafficLightController {
+  - trafficLights: List<TrafficLight>
+  - trafficLightViews: List<TrafficLightView>
+  + addTrafficLight()
+  + removeTrafficLight()
+  + clearAllTrafficLights()
+  + pauseAllLights()
+  + resumeAllLights()
+  + getTrafficLights()
+}
+
+class TrafficLightView {
+  - trafficLight: TrafficLight
+  + onTrafficLightUpdated()
+  + updateView()
+}
+
+interface TrafficLightObserver {
+  + onTrafficLightUpdated(light: TrafficLight)
+}
+
+' ========= 关系定义 =========
+
+' 观察者模式
+TrafficLight ..|> TrafficLightObserver
+TrafficLightView ..|> TrafficLightObserver : implements
+TrafficLight --> TrafficLightObserver : registerObserver()
+
+' 控制器管理灯和视图
+TrafficLightController --> TrafficLight : 控制逻辑
+TrafficLightController --> TrafficLightView : 创建视图
+TrafficLightView --> TrafficLight : 图形依赖数据
+
+@enduml

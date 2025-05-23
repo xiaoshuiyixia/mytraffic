@@ -1,0 +1,28 @@
+<configuration>
+
+    <!-- 控制台日志输出配置 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- 日志输出格式，包含时间、线程、日志级别、日志记录器名和日志消息 -->
+            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 文件日志输出配置 -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/app.log</file>  <!-- 日志文件输出路径 -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 控制根日志记录器的输出级别 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />  <!-- 控制台输出 -->
+        <appender-ref ref="FILE" />    <!-- 文件输出 -->
+    </root>
+
+    <!-- 根据包名设置具体的日志级别 -->
+    <logger name="com.example.mytraffic" level="DEBUG" /> <!-- 针对特定包，输出详细的DEBUG日志 -->
+
+</configuration>

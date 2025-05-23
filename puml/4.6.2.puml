@@ -1,0 +1,36 @@
+@startuml
+
+
+skinparam linetype ortho
+skinparam dpi 150
+skinparam defaultTextAlignment center
+
+class Car {
+  + getId(): int
+  + getLaneIndex(): int
+  + getEnterTime(): long
+  + getSpeed(): int
+  + getPositionX(): double
+  + getTotalWaitTime(): long
+  + getCsvRow(): String
+}
+
+class CsvExporter {
+  + export(cars: List<Car>, filename: String): void
+}
+
+class UIController {
+  + onExportButtonClicked(): void
+}
+
+class FileSystem {
+  <<external>>
+}
+
+' ========= 关系定义 =========
+
+UIController --> CsvExporter : 调用 export()
+CsvExporter --> Car : 调用 getCsvRow()
+CsvExporter --> FileSystem : 写入 CSV 文件
+
+@enduml

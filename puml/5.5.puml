@@ -1,0 +1,22 @@
+@startuml
+
+
+skinparam linetype ortho
+skinparam dpi 150
+skinparam defaultTextAlignment center
+
+rectangle "CarController\n(更新车辆列表)" as CarCtrl
+rectangle "ObservableList<Car>\n(数据绑定源)" as ObsList
+rectangle "TableView<Car>\n(左表格 / 右表格)" as TableView
+rectangle "CsvExporter\n(数据导出类)" as Exporter
+rectangle "UIController\n(导出按钮事件)" as UI
+rectangle "CSV 文件\n(car_data_xxx.csv)" as CSV
+
+CarCtrl --> ObsList : 分发车辆数据
+ObsList --> TableView : 自动刷新表格展示
+
+UI --> Exporter : 点击“导出CSV”
+Exporter --> CarCtrl : 获取车辆列表
+Exporter --> CSV : 写入文件
+
+@enduml

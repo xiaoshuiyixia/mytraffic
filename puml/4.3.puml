@@ -1,0 +1,48 @@
+@startuml
+
+
+skinparam linetype ortho
+skinparam dpi 150
+skinparam defaultTextAlignment center
+
+class SimulationController {
+  - carController: CarController
+  - trafficLightController: TrafficLightController
+  - running: boolean
+  - paused: boolean
+  + start()
+  + togglePause()
+  + stop()
+  + isRunning()
+  + isPaused()
+}
+
+class TrafficController {
+  - simulationController: SimulationController
+  - carController: CarController
+  - trafficLightController: TrafficLightController
+  - uiController: UIController
+  + startSimulation()
+  + togglePauseSimulation()
+  + stopSimulation()
+  + resetSimulation()
+  + addCar()
+  + removeCar()
+  + addTrafficLight()
+  + removeTrafficLight()
+}
+
+class CarController
+class TrafficLightController
+class UIController
+
+' ========= 关系定义 =========
+TrafficController --> SimulationController : 控制模拟生命周期
+TrafficController --> CarController : 添加/移除车辆
+TrafficController --> TrafficLightController : 添加/移除信号灯
+TrafficController --> UIController : 响应按钮操作
+
+SimulationController --> CarController : 控制车辆线程
+SimulationController --> TrafficLightController : 控制灯线程
+
+@enduml

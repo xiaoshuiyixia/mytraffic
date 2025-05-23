@@ -1,0 +1,51 @@
+@startuml
+
+
+skinparam linetype ortho
+skinparam dpi 150
+skinparam defaultTextAlignment center
+
+' ========== 类定义 ==========
+class Car {
+  - id: int
+  - positionX: double
+  - laneIndex: int
+  - speed: int
+  - trafficLights: List<TrafficLight>
+  - allCars: List<Car>
+  + move()
+  + pause()
+  + resume()
+  + stop()
+  + registerObserver()
+  + getCsvRow()
+}
+
+class CarController {
+  - cars: List<Car>
+  - carViews: List<CarView>
+  + addCar()
+  + removeCar()
+  + clearAllCars()
+  + updateCarTables()
+}
+
+class CarView {
+  - car: Car
+  + onCarUpdated()
+  + updatePosition()
+}
+
+interface CarObserver {
+  + onCarUpdated(car: Car)
+}
+
+Car ..|> CarObserver : implements
+CarView ..|> CarObserver : implements
+Car --> CarObserver : registerObserver()
+
+CarController --> Car : 控制车辆
+CarController --> CarView : 创建视图
+CarView --> Car : 依赖模型更新图形
+
+@enduml

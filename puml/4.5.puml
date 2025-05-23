@@ -1,0 +1,84 @@
+@startuml
+
+skinparam linetype ortho
+skinparam dpi 150
+skinparam defaultTextAlignment center
+
+' ========= 类定义 =========
+
+interface PausableTask {
+  + pause(): void
+  + resume(): void
+  + stop(): void
+}
+
+interface CarObserver {
+  + onCarUpdated(car: Car): void
+}
+
+class Car implements Runnable, PausableTask {
+  - positionX: double
+  - laneIndex: int
+  - speed: int
+  - observers: List<CarObserver>
+  + run()
+  + move()
+  + registerObserver()
+  + notifyObservers()
+}
+
+class CarView implements CarObserver {
+  - car: Car
+  + onCarUpdated()
+  + updatePosition()
+}
+
+class CarThreadManager {
+  + submit(car: Runnable): Future
+  + shutdown()
+}
+
+interface TrafficLightObserver {
+  + onTrafficLightUpdated(light: TrafficLight): void
+}
+
+class TrafficLight implements Runnable, PausableTask {
+  - positionX: int
+  - currentColor: Color
+  - observers: List<TrafficLightObserver>
+  + run()
+  + switchToNextColor()
+  + registerObserver()
+  + notifyObservers()
+}
+
+class TrafficLightView implements TrafficLightObserver {
+  - trafficLight: TrafficLight
+  + onTrafficLightUpdated()
+  + updateView()
+}
+
+class LightThreadManager {
+  + submit(light: Runnable): Future
+  + shutdown()
+}
+
+' ========= 多线程关系 =========
+CarThreadManager --> Car : 调度线程
+LightThreadManager --> TrafficLight : 调度线程
+
+Car ..|> Runnable
+Car ..|> PausableTask
+TrafficLight ..|> Runnable
+TrafficLight ..|> PausableTask
+
+' ========= 观察者关系 =========
+Car --> CarObserver : registerObserver()
+CarView ..|> CarObserver
+CarView --> Car : 观察数据
+
+TrafficLight --> TrafficLightObserver : registerObserver()
+TrafficLightView ..|> TrafficLightObserver
+TrafficLightView --> TrafficLight : 观察数据
+
+@enduml

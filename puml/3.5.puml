@@ -1,0 +1,38 @@
+@startuml
+
+
+skinparam linetype ortho
+skinparam dpi 150
+skinparam defaultTextAlignment center
+
+left to right direction
+
+' 主调度器
+rectangle "SimulationController\n(模拟控制器)" as SimCtrl
+
+' 线程池
+package "线程池" {
+    rectangle "CarThreadManager\n车辆线程池" as CarPool
+    rectangle "LightThreadManager\n交通灯线程池" as LightPool
+}
+
+' 子模块
+rectangle "Car\n(车辆线程)" as CarThread
+rectangle "TrafficLight\n(信号灯线程)" as LightThread
+
+' UI 部分
+rectangle "UI线程\n(JavaFX主线程)" as UI
+
+' 连接关系
+SimCtrl --> CarPool : 提交车辆任务
+SimCtrl --> LightPool : 提交通灯任务
+
+CarPool --> CarThread : 线程调度
+LightPool --> LightThread : 线程调度
+
+CarThread --> UI : 更新车辆视图\n(CarView)
+LightThread --> UI : 更新灯视图\n(TrafficLightView)
+
+UI --> SimCtrl : 控制按钮点击\n(启动/暂停/停止)
+
+@enduml
